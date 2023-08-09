@@ -1,12 +1,130 @@
 # Importando as bibliotecas
 import numpy as np
 
+from piece import Piece
+from dog import Dog
+from jaguar import Jaguar
+
 def main():
-    board = np.zeros((9, 7)) # Inicializando o tabuleiro
-    board[1:-5, 1:-1] = -1 # Inimigos
-    board[3, 3] = 1 # Jogador
-    board[0] = board[:,0] = board[:,-1] = board[-1:] = None # Bordas de ajuste
-    board[-3,-2] = board[-2,-3] = board[-2,2] = board[-3, 1] = None # Triângulo abaixo
+    board = np.zeros((7, 5), dtype=Piece) # Inicializando o tabuleiro
+    
+    Dog(board, (0, 0), (
+        (0, 1), (1, 0), (1, 1),
+    ))
+    Dog(board, (0, 1), (
+        (0, 0), (0, 2), (1, 1),
+    ))
+    Dog(board, (0, 2), (
+        (0, 1), (0, 3),
+        (1, 1), (1, 2), (1, 3),
+    ))
+    Dog(board, (0, 3), (
+        (0, 2), (0, 4), (1, 3),
+    ))
+    Dog(board, (0, 4), (
+        (0, 3), (1, 3), (1, 4),
+    ))
+
+    Dog(board, (1, 0), (
+        (0, 0), (1, 1), (2, 0),
+    ))
+    Dog(board, (1, 1), (
+        (0, 0), (0, 1), (0, 2),
+        (1, 0), (1, 2),
+        (2, 0), (2, 1), (2, 2),
+    ))
+    Dog(board, (1, 2), (
+        (0, 2), (1, 1), (1, 3), (2, 2),
+    ))
+    Dog(board, (1, 3), (
+        (0, 2), (0, 3), (0, 4),
+        (1, 2), (1, 4),
+        (2, 2), (2, 3), (2, 4),
+    ))
+    Dog(board, (1, 4), (
+        (0, 4), (1, 3), (2, 4)
+    ))
+
+    Dog(board, (2, 0), (
+        (1, 0), (1, 1),
+        (2, 1),
+        (3, 0), (3, 1),
+    ))
+    Dog(board, (2, 1), (
+        (2, 0), (2, 2), (1, 1), (3, 1),
+    ))
+    Jaguar(board, (2, 2), (
+        (1, 1), (1, 2), (1, 3),
+        (2, 1), (2, 3),
+        (3, 1), (3, 2), (3, 3),
+    ))
+    Dog(board, (2, 3), (
+        (1, 3), (2, 2), (2, 4), (3, 3),
+    ))
+    Dog(board, (2, 4), (
+        (1, 3), (1, 4),
+        (2, 3),
+        (3, 3), (3, 4),
+    ))
+
+    Piece(board, (3, 0), (
+        (2, 0), (3, 1), (4, 0)
+    ))
+    Piece(board, (3, 1), (
+        (2, 0), (2, 1), (2, 2),
+        (3, 0), (3, 2),
+        (4, 0), (4, 1), (4, 2),
+    ))
+    Piece(board, (3, 2), (
+        (2, 2), (3, 1), (3, 3), (4, 2)
+    ))
+    Piece(board, (3, 3), (
+        (2, 2), (2, 3), (2, 4),
+        (3, 2), (3, 4),
+        (4, 2), (4, 3), (4, 4),
+    ))
+    Piece(board, (3, 4), (
+        (2, 4), (3, 3), (4, 4),
+    ))
+
+    Piece(board, (4, 0), (
+        (3, 0), (3, 1), (4, 1),
+    ))
+    Piece(board, (4, 1), (
+        (3, 1), (4, 0), (4, 2)
+    ))
+    Piece(board, (4, 2), (
+        (3, 1), (3, 2), (3, 3), 
+        (4, 1), (4, 3),
+        (5, 1), (5, 2), (5, 3)
+    ))
+    Piece(board, (4, 3), (
+        (3, 3), (4, 2), (4, 4),
+    ))
+    Piece(board, (4, 4), (
+        (3, 3), (4, 3), (3, 4)
+    ))
+
+    Piece(board, (5, 1), (
+        (4, 2), (5, 2), (6, 1),
+    ))
+    Piece(board, (5, 2), (
+        (4, 2), (5, 1), (5, 3), (6, 2),
+    ))
+    Piece(board, (5, 3), (
+        (4, 2), (5, 2), (6, 3),
+    ))
+
+    Piece(board, (6, 1), (
+        (5, 1), (6, 2),
+    ))
+    Piece(board, (6, 2), (
+        (5, 2), (6, 1), (6, 3),
+    ))
+    Piece(board, (6, 3), (
+        (5, 3), (6, 2),
+    ))
+
     print(board) # Mostrando o tabuleiro inicial
 
 if __name__ == '__main__': # Execução no módulo
