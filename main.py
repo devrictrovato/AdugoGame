@@ -132,9 +132,9 @@ def main():
     ))
 
     print(board) # Mostrando o tabuleiro inicial
-    for _ in range(0, 10): # Simulando 10 jogadas dos inimigos
+    for _ in range(0, 20): # Simulando as jogadas dos inimigos
         play(board, dogs)
-    print(board) # Mostrando o tabuleiro final
+    print('\n', board) # Mostrando o tabuleiro final
     
 if __name__ == '__main__': # Execução no módulo
     main()
