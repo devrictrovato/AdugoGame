@@ -135,6 +135,10 @@ def main():
     for _ in range(0, 20): # Simulando as jogadas dos inimigos
         play(board, dogs)
     print('\n', board) # Mostrando o tabuleiro final
+
+    jaguar.move_to(4, 4)
+
+    print('\n', board)
     
 if __name__ == '__main__': # Execução no módulo
     main()
