@@ -30,6 +30,8 @@ class Piece:
     
     def swap(self, other): # Troca a posicao atual com outra
         self.board[self.pos], self.board[other.pos] = other, self
+        self.pos, other.pos = other.pos, self.pos
+        self.connections, other.connections = other.connections, self.connections
     
     def __repr__(self) -> str: # Visualizacao no tabuleiro
         return str(self.__class__.__name__)
