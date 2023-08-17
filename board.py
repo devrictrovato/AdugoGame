@@ -7,7 +7,7 @@ from jaguar import Jaguar
 
 from play import play
 
-def main():
+def create():
     board = np.zeros((7, 5), dtype=Piece) # Inicializando o tabuleiro
     
     dogs = [] # Armazenamento dos inimigos
@@ -131,10 +131,8 @@ def main():
         (5, 3), (6, 2),
     ))
 
-    print(board) # Mostrando o tabuleiro inicial
-    for _ in range(0, 20): # Simulando as jogadas dos inimigos
-        play(board, dogs)
-    print('\n', board) # Mostrando o tabuleiro final
-    
-if __name__ == '__main__': # Execução no módulo
-    main()
+    # for _ in range(0, 20): # Simulando as jogadas dos inimigos
+    #     play(board, dogs)
+    # print('\n', board) # Mostrando o tabuleiro final
+
+    return board, jaguar, dogs
