@@ -11,6 +11,8 @@ class Game:
         self.width, self.height = width, height
         self.board, self.jaguar, self.dogs = board
         self.pieces = list()
+        self.is_select = False
+        self.enemy_turn = False
         pygame.init()
         self.screen = pygame.display.set_mode(
             (self.width, self.height)
@@ -29,6 +31,18 @@ class Game:
                     self.collisions(pos)
 
             self.screen.fill("black") # Cor de fundo padrao
+
+            # Atualizacao para cada acao
+            if self.enemy_turn:
+                play(self.board, self.dogs)
+                self.enemy_turn = False
+
+            lose = [isinstance(self.board[i], Dog) 
+                    for i in self.jaguar.connections.keys()]
+            if self.jaguar.score > 4:
+                print('You win !')
+            elif all(lose):
+                print('Game Over !')
 
             # Renderizando a interface do jogador
             self.draw(self.board)
@@ -56,7 +70,10 @@ class Game:
                         self.triangle(x, y, current, position, piece_size, offset, "green")
                         in_triangle = True
                     else:
-                        piece = pygame.draw.circle(self.screen, "green", position, piece_size)
+                        if self.is_select:
+                            piece = pygame.draw.circle(self.screen, "darkgreen", position, piece_size)
+                        else:
+                            piece = pygame.draw.circle(self.screen, "green", position, piece_size)
                 # Inimigos
                 elif isinstance(current, Dog):
                     if x == 6:
@@ -78,11 +95,17 @@ class Game:
         for select, piece in self.pieces:
             if select.collidepoint(position):
                 if isinstance(piece, Jaguar):
-                    print('Jaguar')
+                    self.is_select = not self.is_select
                 elif isinstance(piece, Dog):
-                    print('Dog')
+                    continue
                 elif isinstance(piece, Piece):
-                    print('Vazio')
+                    if self.is_select:
+                        x, y = piece.pos
+                        is_moved = self.jaguar.move(x, y)
+                        self.is_select = False
+                        if not self.is_select and is_moved:
+                            self.enemy_turn = True
+        self.pieces.clear()
 
     def points(self, piece, current):
         if (piece, current) not in self.pieces:
@@ -91,14 +114,19 @@ class Game:
 
     def triangle(self, x, y, current, position, size, offset, color):
         if x == 6 and y == 1:
-            position = pygame.Vector2(position.x, position.y + offset * 3)
+            position = pygame.Vector2(position.x, position.y - offset)
             piece = pygame.draw.circle(self.screen, color, position, size)
         elif x == 6 and y == 2:
             position = pygame.Vector2(position.x, position.y)
             piece = pygame.draw.circle(self.screen, color, position, size)
         elif x == 6 and y == 3:
-            position = pygame.Vector2(position.x, position.y - offset * 3)
+            position = pygame.Vector2(position.x, position.y + offset)
             piece = pygame.draw.circle(self.screen, color, position, size)
+        if self.board[x, y] == self.jaguar:
+            if self.is_select:
+                piece = pygame.draw.circle(self.screen, "darkgreen", position, size)
+            else:
+                piece = pygame.draw.circle(self.screen, "green", position, size)
         self.points(piece, current)
         
 
