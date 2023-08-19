@@ -13,6 +13,9 @@ class Game:
         self.pieces = list()
         self.is_select = False
         self.enemy_turn = False
+        self.piece_size = 30
+        self.offset = self.width // 8
+        self.mesh = None
         pygame.init()
         self.screen = pygame.display.set_mode(
             (self.width, self.height)
@@ -44,50 +47,55 @@ class Game:
                 print('Game Over !')
 
             # Renderizando a interface do jogador
-            self.lines()
-            self.draw(self.board)
+            if self.mesh is not None: # Renderizando os caminhos no tabuleiro
+                for p1, p2 in self.mesh:
+                    pygame.draw.line(self.screen, "white", p1, p2, 5)
+            
+            self.draw() # Renderizando as pecas
+
+            if self.mesh is None: 
+                self.mesh = self.lines()
+                
 
             pygame.display.flip()
 
             self.clock.tick(60) # FPS
 
-    def draw(self, board):
+    def draw(self):
         # Criando a interface grafica do tabuleiro
-        piece_size = 30
-        offset = self.width // 8
         piece = None
-        for x in range(0, len(board)):
-            for y in range(0, len(board[0])):
-                current = board[x, y]
+        for x in range(0, len(self.board)):
+            for y in range(0, len(self.board[0])):
+                current = self.board[x, y]
                 position = pygame.Vector2(
-                    (self.screen.get_width() / 8) + offset * x, 
-                    (self.screen.get_height() / 6) + offset * y
+                    (self.screen.get_width() / 8) + self.offset * x, 
+                    (self.screen.get_height() / 6) + self.offset * y
                 )
                 in_triangle = False
                 # Jogador
                 if isinstance(current, Jaguar):
                     if x == 6:
-                        self.triangle(x, y, current, position, piece_size, offset, "green")
+                        self.triangle(x, y, current, position, self.piece_size, "green")
                         in_triangle = True
                     else:
                         if self.is_select:
-                            piece = pygame.draw.circle(self.screen, "darkgreen", position, piece_size)
+                            piece = pygame.draw.circle(self.screen, "darkgreen", position, self.piece_size)
                         else:
-                            piece = pygame.draw.circle(self.screen, "green", position, piece_size)
+                            piece = pygame.draw.circle(self.screen, "green", position, self.piece_size)
                 # Inimigos
                 elif isinstance(current, Dog):
                     if x == 6:
-                        self.triangle(x, y, current, position, piece_size, offset, "red")
+                        self.triangle(x, y, current, position, self.piece_size, "red")
                         in_triangle = True
                     else:
-                        piece = pygame.draw.circle(self.screen, "red", position, piece_size)
+                        piece = pygame.draw.circle(self.screen, "red", position, self.piece_size)
                 # Livres
                 elif isinstance(current, Piece):
                     if x == 6:
-                        self.triangle(x, y, current, position, piece_size, offset, "blue")
+                        self.triangle(x, y, current, position, self.piece_size, "blue")
                         in_triangle = True
                     else:
-                        piece = pygame.draw.circle(self.screen, "blue", position, piece_size)
+                        piece = pygame.draw.circle(self.screen, "blue", position, self.piece_size)
                 if not in_triangle:
                     self.points(piece, current)
     
@@ -113,22 +121,22 @@ class Game:
                 self.pieces.append((piece, current))
 
     def lines(self):
-        # for x, piece in self.pieces:
-        #     for y, connection in self.pieces:
-        #         if connection in piece.connections.values():
-        #             pygame.draw.line(self.screen, "white", x.center, y.center, 5)
-        standart = pygame.image.load('.\\imgs\\mesh.png').convert()
-        self.screen.blit(standart, (63, 65))
+        lines = []
+        for x, piece in self.pieces:
+            for y, connection in self.pieces:
+                if connection in piece.connections.values():
+                    lines.append((x.center, y.center))
+        return lines
 
-    def triangle(self, x, y, current, position, size, offset, color):
+    def triangle(self, x, y, current, position, size, color):
         if x == 6 and y == 1:
-            position = pygame.Vector2(position.x, position.y - offset)
+            position = pygame.Vector2(position.x, position.y - self.offset)
             piece = pygame.draw.circle(self.screen, color, position, size)
         elif x == 6 and y == 2:
             position = pygame.Vector2(position.x, position.y)
             piece = pygame.draw.circle(self.screen, color, position, size)
         elif x == 6 and y == 3:
-            position = pygame.Vector2(position.x, position.y + offset)
+            position = pygame.Vector2(position.x, position.y + self.offset)
             piece = pygame.draw.circle(self.screen, color, position, size)
         if self.board[x, y] == self.jaguar:
             if self.is_select:
