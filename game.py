@@ -37,14 +37,14 @@ class Game:
                 play(self.board, self.dogs)
                 self.enemy_turn = False
 
-            lose = [isinstance(self.board[i], Dog) 
-                    for i in self.jaguar.connections.keys()]
+            lose = [isinstance(self.board[i], Dog) for i in self.jaguar.connections.keys()]
             if self.jaguar.score > 4:
                 print('You win !')
             elif all(lose):
                 print('Game Over !')
 
             # Renderizando a interface do jogador
+            self.lines()
             self.draw(self.board)
 
             pygame.display.flip()
@@ -111,6 +111,14 @@ class Game:
         if (piece, current) not in self.pieces:
             if isinstance(current, Piece):
                 self.pieces.append((piece, current))
+
+    def lines(self):
+        # for x, piece in self.pieces:
+        #     for y, connection in self.pieces:
+        #         if connection in piece.connections.values():
+        #             pygame.draw.line(self.screen, "white", x.center, y.center, 5)
+        standart = pygame.image.load('.\\imgs\\mesh.png').convert()
+        self.screen.blit(standart, (63, 65))
 
     def triangle(self, x, y, current, position, size, offset, color):
         if x == 6 and y == 1:
