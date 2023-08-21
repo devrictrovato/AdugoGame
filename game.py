@@ -23,6 +23,18 @@ class Game:
         self.piece_size = self.offset // 4
 
         self.mesh = None
+        self.colors = {
+            'jaguar': '#FCBA12',
+            'dog': '#9E8E00',
+            'free': '#B9B36E',
+            'connection': '#E08D2E',
+            'select': '#FB8604',
+            'bg': '#6D6412',
+            'title': '#F0BC00',
+            'invalid': '#FFECBD',
+            'win': '#FFE70A',
+            'lose': '#C1EF1A',
+        }
 
         pygame.init()
         self.screen = pygame.display.set_mode(
@@ -41,7 +53,7 @@ class Game:
                     pos = pygame.mouse.get_pos()
                     self.collisions(pos)
 
-            self.screen.fill("#2B3409") # Cor de fundo padrao
+            self.screen.fill(self.colors['bg']) # Cor de fundo padrao
 
             # Atualizacao para cada acao
             if self.enemy_turn:
@@ -59,30 +71,29 @@ class Game:
 
             if self.mesh is not None: # Renderizando os caminhos no tabuleiro
                 for p1, p2 in self.mesh:
-                    pygame.draw.line(self.screen, "#4C5138", p1, p2, 5)
+                    pygame.draw.line(self.screen, self.colors['connection'], p1, p2, 5)
             
             self.draw() # Renderizando as pecas
 
             if self.mesh is None: 
                 self.mesh = self.lines()
-                
 
             pygame.display.flip()
 
             self.clock.tick(60) # FPS
 
     def texts(self):
-        self.text('Adugo Game', '#F0BC00',  self.piece_size * 2, self.width // 3, self.height // 10 )
+        self.text('Adugo Game', self.colors['title'],  self.piece_size * 2, self.width // 3, self.height // 10 )
         if self.win:
-            self.text('Voce Venceu !', '#8A8A00', self.piece_size, self.width - (self.offset * 2), self.height // 10)
+            self.text('Voce Venceu !', self.colors['win'], self.piece_size, self.width - (self.offset * 2), self.height // 10)
         elif self.lose:
-            self.text('Voce Perdeu !', '#C1EF1A', self.piece_size, self.width - (self.offset * 2), self.height // 10)
+            self.text('Voce Perdeu !', self.colors['lose'], self.piece_size, self.width - (self.offset * 2), self.height // 10)
         elif self.miss:
-            self.text('Movimento invalido', '#977B0C', self.piece_size, self.width - (self.offset * 2), self.height // 10)
+            self.text('Movimento invalido', self.colors['invalid'], self.piece_size, self.width - (self.offset * 2), self.height // 10)
 
     def text(self, phrase, color, size, x, y):
         font = pygame.font.Font('freesansbold.ttf', size)
-        text = font.render(phrase, True, color, '#2B3409')
+        text = font.render(phrase, True, color, self.colors['bg'])
         rect = text.get_rect()
         rect.center = (x, y)
         self.screen.blit(text, rect)
@@ -102,27 +113,27 @@ class Game:
                 # Jogador
                 if isinstance(current, Jaguar):
                     if x == 6:
-                        self.triangle(x, y, current, position, self.piece_size, "#FCCB1A")
+                        self.triangle(x, y, current, position, self.piece_size, self.colors['jaguar'])
                         in_triangle = True
                     else:
                         if self.is_select:
-                            piece = pygame.draw.circle(self.screen, "#FEFE33", position, self.piece_size)
+                            piece = pygame.draw.circle(self.screen, self.colors['select'], position, self.piece_size)
                         else:
-                            piece = pygame.draw.circle(self.screen, "#FCCB1A", position, self.piece_size)
+                            piece = pygame.draw.circle(self.screen, self.colors['jaguar'], position, self.piece_size)
                 # Inimigos
                 elif isinstance(current, Dog):
                     if x == 6:
-                        self.triangle(x, y, current, position, self.piece_size, "#94A06A")
+                        self.triangle(x, y, current, position, self.piece_size, self.colors['dog'])
                         in_triangle = True
                     else:
-                        piece = pygame.draw.circle(self.screen, "#94A06A", position, self.piece_size)
+                        piece = pygame.draw.circle(self.screen,self.colors['dog'], position, self.piece_size)
                 # Livres
                 elif isinstance(current, Piece):
                     if x == 6:
-                        self.triangle(x, y, current, position, self.piece_size, "#B2D732")
+                        self.triangle(x, y, current, position, self.piece_size, self.colors['free'])
                         in_triangle = True
                     else:
-                        piece = pygame.draw.circle(self.screen, "#B2D732", position, self.piece_size)
+                        piece = pygame.draw.circle(self.screen, self.colors['free'], position, self.piece_size)
                 if not in_triangle:
                     self.points(piece, current)
     
@@ -170,9 +181,9 @@ class Game:
             piece = pygame.draw.circle(self.screen, color, position, size)
         if self.board[x, y] == self.jaguar:
             if self.is_select:
-                piece = pygame.draw.circle(self.screen, "#FEFE33", position, size)
+                piece = pygame.draw.circle(self.screen, self.colors['jaguar'], position, size)
             else:
-                piece = pygame.draw.circle(self.screen, "#FCCB1A", position, size)
+                piece = pygame.draw.circle(self.screen, self.colors['jaguar'], position, size)
         self.points(piece, current)
         
 
