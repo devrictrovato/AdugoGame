@@ -17,7 +17,7 @@ class Piece:
         # Valorizando esta posicao no tabuleiro
         result = 0
         for _, v in self.connections.items():
-            result += 1 if isinstance(v, rewards) else -len(self.connections)
+            result += 1 if isinstance(v, rewards) else -1
         return result
     
     def moves(self, *invalids):

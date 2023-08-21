@@ -5,7 +5,7 @@ from minimax import minimax
 from dog import Dog
 from jaguar import Jaguar
 
-def play(board, dogs):
+def play(board, jaguar, dogs):
     # Escolhendo a peça disponivel para movimentar
     available = [dog for dog in dogs if dog.moves(Dog, Jaguar)]
     depth = log(len(available), 2)
@@ -26,4 +26,7 @@ def play(board, dogs):
     
     to_move = minimax(0, 0, True, moves, depth)
 
-    select.swap(to_move) # Troca de pecas no tabuleiro
+    if to_move.pos != jaguar.pos:
+        select.swap(to_move) # Troca de pecas no tabuleiro
+    else:
+        play(board, jaguar, dogs)

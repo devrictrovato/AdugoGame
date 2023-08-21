@@ -57,7 +57,7 @@ class Game:
 
             # Atualizacao para cada acao
             if self.enemy_turn:
-                play(self.board, self.dogs)
+                play(self.board, self.jaguar, self.dogs)
                 self.enemy_turn = False
 
             lose = [isinstance(self.board[i], Dog) for i in self.jaguar.connections.keys()]
@@ -147,7 +147,10 @@ class Game:
                 elif isinstance(piece, Piece):
                     if self.is_select:
                         x, y = piece.pos
-                        is_moved = self.jaguar.move(x, y)
+                        is_moved, removed = self.jaguar.move(x, y)
+                        if removed is not None:
+                            self.dogs.remove(removed)
+                            print(len(self.dogs))
                         self.is_select = False
                         if not self.is_select and is_moved:
                             self.enemy_turn = True
@@ -181,7 +184,7 @@ class Game:
             piece = pygame.draw.circle(self.screen, color, position, size)
         if self.board[x, y] == self.jaguar:
             if self.is_select:
-                piece = pygame.draw.circle(self.screen, self.colors['jaguar'], position, size)
+                piece = pygame.draw.circle(self.screen, self.colors['select'], position, size)
             else:
                 piece = pygame.draw.circle(self.screen, self.colors['jaguar'], position, size)
         self.points(piece, current)

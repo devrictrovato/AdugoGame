@@ -25,7 +25,7 @@ class Jaguar(Piece):
             avaliable = new_pos.pos in self.connections.keys()
             if avaliable and not isinstance(new_pos, Dog):
                 self.swap(new_pos)
-                return True
+                return True, None
         elif check < 3:
             # Verificando o pulo do jogador
             jump = utils.middle(self.pos, (x, y))
@@ -39,6 +39,6 @@ class Jaguar(Piece):
                 self.swap(new_pos)
                 dog.remove()
                 self.score += 1
-                return True
-        return False
+                return True, dog
+        return False, None
         
