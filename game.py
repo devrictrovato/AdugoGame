@@ -173,15 +173,8 @@ class Game:
         return lines
 
     def triangle(self, x, y, current, position, size, color):
-        if x == 6 and y == 1:
-            position = pygame.Vector2(position.x, position.y - self.offset)
-            piece = pygame.draw.circle(self.screen, color, position, size)
-        elif x == 6 and y == 2:
-            position = pygame.Vector2(position.x, position.y)
-            piece = pygame.draw.circle(self.screen, color, position, size)
-        elif x == 6 and y == 3:
-            position = pygame.Vector2(position.x, position.y + self.offset)
-            piece = pygame.draw.circle(self.screen, color, position, size)
+        position = pygame.Vector2(position.x, position.y)
+        piece = pygame.draw.circle(self.screen, color, position, size)
         if self.board[x, y] == self.jaguar:
             if self.is_select:
                 piece = pygame.draw.circle(self.screen, self.colors['select'], position, size)
