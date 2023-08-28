@@ -5,6 +5,7 @@ from jaguar import Jaguar
 from dog import Dog
 from piece import Piece
 from play import play
+from time import sleep
 
 class Game:
     def __init__(self, width, height, board) -> None:
@@ -82,6 +83,10 @@ class Game:
 
             self.clock.tick(60) # FPS
 
+            if self.win or self.lose:
+                sleep(3)
+                self = Game(self.width, self.height, create())
+
     def texts(self):
         self.text('Adugo Game', self.colors['title'],  self.piece_size * 2, self.width // 3, self.height // 10 )
         if self.win:
@@ -150,7 +155,6 @@ class Game:
                         is_moved, removed = self.jaguar.move(x, y)
                         if removed is not None:
                             self.dogs.remove(removed)
-                            print(len(self.dogs))
                         self.is_select = False
                         if not self.is_select and is_moved:
                             self.enemy_turn = True
