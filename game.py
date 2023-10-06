@@ -12,7 +12,7 @@ class Game:
         self.width, self.height = width, height
 
         self.board, self.jaguar, self.dogs = board
-        self.pieces = list()
+        self.pieces = dict()
         
         self.is_select = False
         self.enemy_turn = False
@@ -56,34 +56,29 @@ class Game:
 
             self.screen.fill(self.colors['bg']) # Cor de fundo padrao
 
+            self.pieces.clear() # Otimizador
+
             # Atualizacao para cada acao
             if self.enemy_turn:
                 play(self.board, self.jaguar, self.dogs)
                 self.enemy_turn = False
 
+            # Verificando vitoria e derrota
             lose = [isinstance(self.board[i], Dog) for i in self.jaguar.connections.keys()]
             if self.jaguar.score > 4:
                 self.win = True
             elif all(lose):
                 self.lose = True
 
-            # Renderizando a interface do jogador
-            self.texts()
-
-            if self.mesh is not None: # Renderizando os caminhos no tabuleiro
-                for p1, p2 in self.mesh:
-                    pygame.draw.line(self.screen, self.colors['connection'], p1, p2, 5)
+            self.texts() # Renderizando GUI
             
             self.draw() # Renderizando as pecas
-
-            if self.mesh is None: 
-                self.mesh = self.lines()
 
             pygame.display.flip()
 
             self.clock.tick(60) # FPS
 
-            if self.win or self.lose:
+            if self.win or self.lose: # Reiniciando o jogo
                 sleep(3)
                 self = Game(self.width, self.height, create())
 
@@ -141,9 +136,16 @@ class Game:
                         piece = pygame.draw.circle(self.screen, self.colors['free'], position, self.piece_size)
                 if not in_triangle:
                     self.points(piece, current)
+        # Criando as conexoes
+        if self.mesh is None: 
+            self.mesh = self.lines()
+        else:
+            for p1, p2 in self.mesh:
+                pygame.draw.line(self.screen, self.colors['connection'], p1, p2, 5)
     
-    def collisions(self, position):
-        for select, piece in self.pieces:
+    def collisions(self, position): # Verificando pontos de colisao (mouse)
+        for piece, select in self.pieces.items():
+            piece = self.board[piece]
             if select.collidepoint(position):
                 if isinstance(piece, Jaguar):
                     self.is_select = not self.is_select
@@ -161,22 +163,23 @@ class Game:
                             self.miss = False
                         elif not is_moved:
                             self.miss = True
-        self.pieces.clear()
 
-    def points(self, piece, current):
-        if (piece, current) not in self.pieces:
+    def points(self, piece, current): # Relacionando GUI com a Matriz
+        if current not in self.pieces.keys():
             if isinstance(current, Piece):
-                self.pieces.append((piece, current))
+                self.pieces[current.pos] = piece
 
-    def lines(self):
+    def lines(self): # Posicionando as linhas na malha
         lines = []
-        for x, piece in self.pieces:
-            for y, connection in self.pieces:
-                if connection in piece.connections.values():
-                    lines.append((x.center, y.center))
+        for posX, connectionX in self.pieces.items():
+            for posY, connectionY in self.pieces.items():
+                pieceA = self.board[posX]
+                pieceB = self.board[posY]
+                if pieceA in pieceB.connections.values():
+                    lines.append((connectionX.center, connectionY.center))
         return lines
 
-    def triangle(self, x, y, current, position, size, color):
+    def triangle(self, x, y, current, position, size, color): # Triangulo no fim do tabuleiro
         position = pygame.Vector2(position.x, position.y)
         piece = pygame.draw.circle(self.screen, color, position, size)
         if self.board[x, y] == self.jaguar:
