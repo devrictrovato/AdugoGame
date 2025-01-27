@@ -2,6 +2,10 @@
 
 Adugo é um jogo tradicional de tabuleiro da tribo Bororo, nativos do Brasil. Este projeto implementa o jogo Adugo em Python usando Pygame. O jogador controla a onça (jaguar) enquanto a IA controla os cachorros. O objetivo é capturar todos os cachorros ou impedir os movimentos da onça.
 
+## Capturas de Tela
+
+![Captura de tela do jogo](adugo.png)
+
 ## Requisitos
 
 - **Python 3.6 ou superior**
@@ -85,10 +89,6 @@ Se deseja contribuir:
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-
-## Capturas de Tela
-
-![Captura de tela do jogo](adugo.png)
 
 ## Autor
 
